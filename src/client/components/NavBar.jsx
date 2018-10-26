@@ -24,7 +24,7 @@ class NavBar extends React.Component {
       <div className='wrapper'>
         <div className='navBar'>
         <ul>
-          <li><a className="active" href="#data" name='data' onClick={this.handleClick}><img src={dataIcon} className='svgicons'/>Log Out</a></li>
+          <li><a className="active" href="#data" name='data' onClick={this.handleClick}>Log Out</a></li>
         </ul>
         </div>
       </div>

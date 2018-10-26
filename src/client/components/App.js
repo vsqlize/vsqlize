@@ -23,17 +23,11 @@ export default class App extends Component {
     }
 
     this.getTables = this.getTables.bind(this);
-    // this.setCurrentTable = this.setCurrentTable.bind(this);
     this.getTableData = this.getTableData.bind(this);
 
   }
 
-  // setCurrentTable(tableName) {
-  //   this.setState({ currentTable: tableName });
-  // }
-
   getTableData(tableName) {
-    console.log('i ran');
     fetch(`/api/table?table=${tableName}`)
       .then(res => res.json())
       .then(data => this.setState({ headers: data.headers, data: data.data }))
@@ -43,10 +37,6 @@ export default class App extends Component {
     this.setState({
       tables: res
     });
-  }
-
-  componentDidMount() {
-
   }
 
   render() {

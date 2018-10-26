@@ -20,7 +20,7 @@ app.listen(8080, () => {
   console.log('listening at http://localhost:8080');
 });
 
-//CLIENT ROUTES
+// //CLIENT ROUTES
 app.get('/', (req, res, next) => {
   res.header(200);
   res.sendFile(path.join(__dirname,'../../dist','index.html'))
