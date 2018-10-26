@@ -4,7 +4,21 @@ const psqlController = {};
 
 psqlController.connect = connect;
 psqlController.viewTableContents = viewTableContents;
+psqlController.removeConnection = removeConnection;
+psqlController.getAllConnections = getAllConnections;
+psqlController.executeQuery = executeQuery;
+
 psqlController.connections = [];
+
+//expire connections after 5 min.
+setInterval(() => {
+  psqlController.connections.forEach((connection, i) => {
+    let now = Number.parseInt(Date.now());
+    if (now - Number.parseInt(connection.createdAt) > 50000) {
+      psqlController.connections.splice(i,1);
+    }
+  })
+},1000);
 
 function connect(req, res, next) {
 
@@ -31,7 +45,7 @@ function connect(req, res, next) {
       console.error('Unable to connect to the database:', err);
     });
   
-  sequelize.query("SELECT table_schema || '.' || table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_schema NOT IN ('pg_catalog', 'information_schema');").then(function(rows) {
+    sequelize.query("SELECT table_schema || '.' || table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_schema NOT IN ('pg_catalog', 'information_schema');").then(function(rows) {
     
     let tablesArr = [];
     rows[0].forEach(row => {
@@ -48,9 +62,8 @@ function connect(req, res, next) {
       currentQuery : 'none',
       connection : sequelize,
       sessionId : sessionId,
+      createdAt : Date.now(),
     })
-
-    //console.log('connections', psqlController.connections);
 
     res.header(200);
     res.cookie('sessionId', sessionId);
@@ -63,7 +76,7 @@ function viewTableContents(req, res, next) {
   if(!req.cookies['sessionId']){
     //return psqlController.connect(req,res,next);
     res.header(500);
-    res.send('session does not exist');
+    res.send('Session does not exist, should redirect back to authentication page');
   }
   
   let table = req.query.table;
@@ -79,19 +92,28 @@ function viewTableContents(req, res, next) {
       break;
     }
   }
+
+  if(!currentConnObj){
+    res.header(500);
+    res.send('No matching connection object for session cookie, should redirect back to authentication page');
+  }
+
   currentConnObj.active = true;
   currentConnObj.currentQuery = `select * from ${table}`;
 
   currentConnObj.connection.query(currentConnObj.currentQuery)
   .then(rows => {
+    console.log(rows[1].fields);
     console.log(rows[0]);
 
     let responseObj = {};
-    let headers = [];
-    Object.keys(rows[0][0]).forEach(key => {
-      headers.push(key);
-    });
+
+    let headers = []; 
+    rows[1].fields.forEach(field => {
+      headers.push(field.name);
+    })
     responseObj.headers = headers;
+
     responseObj.data = rows[0];
 
     res.header(200);
@@ -101,43 +123,65 @@ function viewTableContents(req, res, next) {
   
 }
 
+function executeQuery (req, res, next) {
+  if(!req.cookies['sessionId']){
+    res.header(500);
+    res.send('Session does not exist, should redirect back to authentication page');
+  }
+
+  let sessionId = req.cookies['sessionId'];
+  let queryString = req.body.sqlQuery;
+
+  //find relevant connection object
+  let currentConnObj;
+  for (let i = 0; i < psqlController.connections.length; i++){
+    if(psqlController.connections[i].sessionId == sessionId){
+      currentConnObj = psqlController.connections[i];
+      break;
+    }
+  }
+
+  if(!currentConnObj){
+    res.header(500);
+    res.send('No matching connection object for session cookie, should redirect back to authentication page');
+  }
+
+  currentConnObj.currentQuery = queryString;
+  currentConnObj.connection.query(currentConnObj.currentQuery)
+  .then(rows => {
+    console.log(rows[0]);
+    res.header(200);
+    res.json(rows[0]);
+    res.end();
+  })
+  .catch(err => {
+    console.warn(err);
+    res.header(400);
+    res.json((err));
+    res.end();
+  })
+}
+
+function removeConnection(req, res, next) {
+  let removed = false;
+  let sessionId = req.cookies['sessionId'];
+  psqlController.connections.forEach((connection, i) => {
+    if (connection.sessionId == sessionId) {
+      psqlController.connections.splice(i,1);
+      removed = true;
+    }
+  });
+
+  res.header(202);
+  res.json(removed ? 'Connection successfuly removed.' : 'Connection unsuccessfully removed.');
+  res.end();
+}
+
+function getAllConnections(req, res, next){
+  console.log(psqlController.connections);
+  res.header(200);
+  res.end();
+}
+
 module.exports = psqlController;
 
-
-
-  // //define model (i.e. table)
-  // const Events = sequelize.define('events', {
-  //   id : {
-  //     type: Sequelize.TEXT, primaryKey: true
-  //   },
-  //   summary : {
-  //     type: Sequelize.TEXT
-  //   },
-  //   htmlLink : {
-  //     type: Sequelize.TEXT
-  //   },
-  //   start : {
-  //     type: Sequelize.DATE
-  //   },
-  //   end : {
-  //     type: Sequelize.DATE
-  //   },
-  //   createdAt : {
-  //     type: Sequelize.DATE
-  //   },
-  //   updatedAt : {
-  //     type: Sequelize.DATE
-  //   },
-  //   sequence : {
-  //     type: Sequelize.INTEGER
-  //   },
-  // },{
-  //   tableName: 'events'
-  // });
-
-  // Events.sync({force: false}).then(() => {
-  //   console.log('table created');
-
-  // sequelize.close();
-    
-  // });
