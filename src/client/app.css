@@ -1,0 +1,28 @@
+h1 {
+  color: green;
+}
+
+html {
+  width: 100%;
+}
+
+body {
+  text-align: center;
+  margin: auto;
+  width: 100%
+}
+
+.sideBar {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+}
+
+.viewTable {
+  margin-left: 200px;
+  padding: 0px 10px;
+}

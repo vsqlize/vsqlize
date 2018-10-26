@@ -20,6 +20,7 @@
     "pg": "^7.5.0",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
+    "react-table": "^6.8.6",
     "sequelize": "^4.41.0"
   },
   "devDependencies": {
