@@ -1,0 +1,50 @@
+body {
+  margin: auto;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  font-family: 'Avenir';
+  text-align: center;
+  color: #777;
+}
+
+input[type=text] {
+  height: 12px; 
+  width: 200px; 
+  padding: 10px;
+  border-radius: 4px;
+  border: 0.5px solid #ebebeb;
+  transition: box-shadow .1s;
+  margin: 10px;
+}
+
+input[type=text]:focus {
+  outline: none;
+}
+
+.wrapper {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.connectionBox {
+  height: 320px; 
+  width: 500px; 
+  padding: 10px;
+  border-radius: 10px;
+  border: 0.5px solid #ebebeb;
+  /* display: flex;
+  justify-content: center; */
+}
+
+#submit-button {
+  background-color: #69D2E7;
+  color: white;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
