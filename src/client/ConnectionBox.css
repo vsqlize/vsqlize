@@ -17,6 +17,7 @@ input[type=text] {
   border: 0.5px solid #ebebeb;
   transition: box-shadow .1s;
   margin: 10px;
+  background-color:
 }
 
 input[type=text]:focus {
@@ -67,14 +68,14 @@ input[type=text]:focus {
 }
 
 .navBar li {
-  text-align: center;
+  float: right;
 }
 
 .navBar li a {
   display: block;
   color: white;
   text-align: center;
-  padding: 12px 14px;
+  padding: 17px 18px;
   text-decoration: none;
 }
 
@@ -86,4 +87,23 @@ input[type=text]:focus {
   height: 12px;
   width: 12px;
   margin-right: 5px;
+}
+
+.queryBox {
+  height: 200px;
+  width: 85%;
+}
+
+textarea {
+  height: 150px; 
+  width: 80%; 
+  padding: 10px;
+  border-radius: 4px;
+  border: 0.5px solid #ebebeb;
+  transition: box-shadow .1s;
+  margin: 10px;
+  float: left;
+}
+textarea:focus {
+  outline: none;
 }
