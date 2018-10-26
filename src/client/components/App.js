@@ -10,8 +10,9 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentTable: null,
       tables: [],
-      headers: ['id', 'name', 'age', 'address', 'salary'],
+      headers: [],
       data: [{
         id: '01',
         name: 'Kyle Combs',
@@ -22,14 +23,26 @@ export default class App extends Component {
     }
 
     this.getTables = this.getTables.bind(this);
+    // this.setCurrentTable = this.setCurrentTable.bind(this);
+    this.getTableData = this.getTableData.bind(this);
 
+  }
+
+  // setCurrentTable(tableName) {
+  //   this.setState({ currentTable: tableName });
+  // }
+
+  getTableData(tableName) {
+    console.log('i ran');
+    fetch(`/api/table?table=${tableName}`)
+      .then(res => res.json())
+      .then(data => this.setState({ headers: data.headers, data: data.data }))
   }
 
   getTables(res) {
     this.setState({
       tables: res
     });
-    console.log(this.state)
   }
 
   componentDidMount() {
@@ -50,7 +63,7 @@ export default class App extends Component {
     return(
       <div>
         <ConnectionBox cb={this.getTables}/>
-        <div className="sideBar"><SideBar tables={ this.state.tables }/></div>
+        <div className="sideBar"><SideBar tables={ this.state.tables } getTableData={ this.getTableData }/></div>
         <div className="viewTable">
         <ReactTable
           data = { data }

@@ -7,11 +7,14 @@ import 'react-table/react-table.css';
 export default class Sidebar extends Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      currentTable: null
+    }
+
   }
 
-  componentDidMount() {
-
+  setCurrentTable(tableName) {
+    this.setState({ currentTable: tableName })
   }
 
   render() {
@@ -21,10 +24,15 @@ export default class Sidebar extends Component {
       tableNames.push({tableName: table});
     })
 
-    console.log(tableNames);
-
     return(
       <ReactTable
+      getTdProps={(state, rowInfo, column, instance) => {
+        return {
+            onClick: () => {
+              this.props.getTableData(rowInfo.original.tableName);
+            }
+          };
+        }}
         data = { tableNames }
         columns = {[
           {
