@@ -39,6 +39,10 @@ export default class App extends Component {
     });
   }
 
+  handleLogInLogOut() {
+    
+  }
+
   render() {
     const { data, headers } = this.state;
     const colNames = [];

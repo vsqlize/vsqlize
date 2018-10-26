@@ -4,11 +4,9 @@ import dataIcon from '../assets/data-icon.svg';
 import queryIcon from '../assets/query-icon.svg';
 
 class NavBar extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      //loggedin:
-    };
+  constructor(props) {
+    super(props);
+    this.state = {};
 
     this.handleClick = this.handleClick.bind(this);
   }
@@ -24,7 +22,7 @@ class NavBar extends React.Component {
       <div className='wrapper'>
         <div className='navBar'>
         <ul>
-          <li><a className="active" href="#data" name='data' onClick={this.handleClick}>Log Out</a></li>
+          <li><a className="active" href="#data" name='data' onClick={this.props.handleClick}>Log Out</a></li>
         </ul>
         </div>
       </div>
