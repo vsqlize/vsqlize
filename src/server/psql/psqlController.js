@@ -14,7 +14,7 @@ psqlController.connections = [];
 setInterval(() => {
   psqlController.connections.forEach((connection, i) => {
     let now = Number.parseInt(Date.now());
-    if (now - Number.parseInt(connection.createdAt) > 50000) {
+    if (now - Number.parseInt(connection.createdAt) > 300000) {
       psqlController.connections.splice(i,1);
     }
   })
@@ -96,6 +96,7 @@ function viewTableContents(req, res, next) {
   if(!currentConnObj){
     res.header(500);
     res.send('No matching connection object for session cookie, should redirect back to authentication page');
+    return;
   }
 
   currentConnObj.active = true;
@@ -106,7 +107,9 @@ function viewTableContents(req, res, next) {
     console.log(rows[1].fields);
     console.log(rows[0]);
 
-    let responseObj = {};
+    let responseObj = {
+      queryString: currentConnObj.currentQuery
+    };
 
     let headers = []; 
     rows[1].fields.forEach(field => {

@@ -7,14 +7,6 @@ class NavBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(event) {
-    console.log('i was clicked')
-
-    event.preventDefault();
   }
 
   render(){
@@ -22,7 +14,7 @@ class NavBar extends React.Component {
       <div className='wrapper'>
         <div className='navBar'>
         <ul>
-          <li><a className="active" href="#data" name='data' onClick={this.props.handleClick}>Log Out</a></li>
+          <li><a className="active" href="#data" name='data' onClick={this.props.logout}>Log Out</a></li>
         </ul>
         </div>
       </div>

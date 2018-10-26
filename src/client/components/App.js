@@ -11,6 +11,7 @@ export default class App extends Component {
     super(props);
     this.state = {
       currentTable: null,
+      queryString: null,
       tables: [],
       headers: [],
       data: [{
@@ -31,7 +32,7 @@ export default class App extends Component {
   getTableData(tableName) {
     fetch(`/api/table?table=${tableName}`)
       .then(res => res.json())
-      .then(data => this.setState({ headers: data.headers, data: data.data }))
+      .then(data => this.setState({ queryString: data.queryString, headers: data.headers, data: data.data }))
   }
 
   toggleContentLogInDisplay() {
@@ -44,13 +45,6 @@ export default class App extends Component {
     });
   }
 
-<<<<<<< HEAD
-  handleLogInLogOut() {
-    
-  }
-
-=======
->>>>>>> 4174cf424a131b47cfb3d5a70a9e4c9d31117b63
   render() {
     const { data, headers } = this.state;
     const colNames = [];
@@ -74,7 +68,7 @@ export default class App extends Component {
           </div>
           
           <div id="loggedInContent" style={{display : isDisplayedLoggedInContent}}>
-            <NavBar />
+            <NavBar logout={ this.toggleContentLogInDisplay }/>
             <div className="sideBar">
               <SideBar tables={ this.state.tables } getTableData={ this.getTableData }/>
             </div>

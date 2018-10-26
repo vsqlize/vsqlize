@@ -21,7 +21,6 @@ class ConnectionBox extends React.Component {
   }
 
   handleSubmit(event) {
-    console.log(this.state)
     fetch('/api/connect', {
       method: 'POST', 
       headers: {'Content-Type': 'application/json; charset=utf-8'},
@@ -35,9 +34,15 @@ class ConnectionBox extends React.Component {
     })
     .then((res) => res.json())
     .then((res) => {
-      console.log(res);
       this.props.cb(res);
-      this.props.toggleContentLogInDisplay();
+      this.props.toggleContentLogInDisplay()
+      this.setState({
+        host: '',
+        port: '',
+        user: '',
+        password: '',
+        database: ''
+      });
     });
 
     event.preventDefault();
