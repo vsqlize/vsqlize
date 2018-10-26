@@ -33,8 +33,12 @@ app.get('/bundle.js', (req, res, next) => {
 //API ROUTES
 app.use('/api', apiRouter);
 
+apiRouter.get('/connect', psqlController.getAllConnections)
 apiRouter.post('/connect', psqlController.connect);
+apiRouter.delete('/connect', psqlController.removeConnection)
+
 apiRouter.get('/table', psqlController.viewTableContents);
+apiRouter.post('/table', psqlController.executeQuery);
 
 
 module.exports = app;
