@@ -45,7 +45,7 @@ module.exports = {
     new CleanWebPackPlugin([outputDir]),
     new HtmlWebpackPlugin({
       template: './public/index.html',
-      favicon: './public/favicon.png'
+      // favicon: './public/favicon.png'
     })
   ]
 };
