@@ -36,7 +36,8 @@ class ConnectionBox extends React.Component {
     .then((res) => res.json())
     .then((res) => {
       console.log(res);
-      this.props.cb(res)
+      this.props.cb(res);
+      this.props.toggleContentLogInDisplay();
     });
 
     event.preventDefault();
@@ -63,6 +64,9 @@ class ConnectionBox extends React.Component {
             <div>Database:
                 <input type='text' name='database' value={this.state.database} onChange={this.handleChange} />
             </div>
+
+
+
 
             <button id='submit-button' value="Submit">submit</button>
           </form>
