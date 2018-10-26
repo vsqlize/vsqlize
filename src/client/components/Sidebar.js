@@ -7,14 +7,7 @@ import 'react-table/react-table.css';
 export default class Sidebar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentTable: null
-    }
-
-  }
-
-  setCurrentTable(tableName) {
-    this.setState({ currentTable: tableName })
+    this.state = {}
   }
 
   render() {
