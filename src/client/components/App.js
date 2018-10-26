@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../app.css';
 import SideBar from './Sidebar';
 import ConnectionBox from './ConnectionBox.jsx';
-
+import NavBar from './NavBar.jsx';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
@@ -62,15 +62,17 @@ export default class App extends Component {
 
     return(
       <div>
-        <ConnectionBox cb={this.getTables}/>
-        <div className="sideBar"><SideBar tables={ this.state.tables } getTableData={ this.getTableData }/></div>
-        <div className="viewTable">
-        <ReactTable
-          data = { data }
-          columns = { colNames }
-        />
+        <NavBar />
+        <div style={{marginTop:'50px'}}>
+          <ConnectionBox cb={this.getTables}/>
+          <div className="sideBar"><SideBar tables={ this.state.tables } getTableData={ this.getTableData }/></div>
+          <div className="viewTable">
+          <ReactTable
+            data = { data }
+            columns = { colNames }
+          />
+          </div>
         </div>
-        
       </div>
     )
   }
