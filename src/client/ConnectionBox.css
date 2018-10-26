@@ -29,14 +29,15 @@ input[type=text]:focus {
   justify-content: center;
   align-items: center;
 }
+
 .connectionBox {
   height: 320px; 
   width: 500px; 
   padding: 10px;
   border-radius: 10px;
   border: 0.5px solid #ebebeb;
-  /* display: flex;
-  justify-content: center; */
+  display: flex;
+  justify-content: center;
 }
 
 #submit-button {

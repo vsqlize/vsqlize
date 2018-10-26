@@ -19,13 +19,14 @@ export default class App extends Component {
         age: '40',
         address: '53 2nd Avenue #5B',
         salary: 120000 
-      }]
+      }],
+      loggedIn : false,
     }
 
     this.getTables = this.getTables.bind(this);
     // this.setCurrentTable = this.setCurrentTable.bind(this);
     this.getTableData = this.getTableData.bind(this);
-
+    this.toggleContentLogInDisplay = this.toggleContentLogInDisplay.bind(this);
   }
 
   // setCurrentTable(tableName) {
@@ -39,14 +40,14 @@ export default class App extends Component {
       .then(data => this.setState({ headers: data.headers, data: data.data }))
   }
 
+  toggleContentLogInDisplay() {
+    this.setState({loggedIn : !this.state.loggedIn});
+  }
+
   getTables(res) {
     this.setState({
       tables: res
     });
-  }
-
-  componentDidMount() {
-
   }
 
   render() {
@@ -60,17 +61,25 @@ export default class App extends Component {
 
     })
 
+    let isDisplayedLogInWindow = this.state.loggedIn ? 'none' : 'block';
+    let isDisplayedLoggedInContent = this.state.loggedIn ? 'block' : 'none';
+
     return(
       <div>
-        <NavBar />
+        
         <div style={{marginTop:'50px'}}>
-          <ConnectionBox cb={this.getTables}/>
-          <div className="sideBar"><SideBar tables={ this.state.tables } getTableData={ this.getTableData }/></div>
-          <div className="viewTable">
-          <ReactTable
-            data = { data }
-            columns = { colNames }
-          />
+          <div id='logInWindow' style={{display : isDisplayedLogInWindow}}>
+            <ConnectionBox cb={this.getTables} toggleContentLogInDisplay={this.toggleContentLogInDisplay}/>
+          </div>
+          
+          <div id="loggedInContent" style={{display : isDisplayedLoggedInContent}}>
+            <NavBar />
+            <div className="sideBar">
+              <SideBar tables={ this.state.tables } getTableData={ this.getTableData }/>
+            </div>
+            <div className="viewTable">
+              <ReactTable data = { data } columns = { colNames }/>
+            </div>
           </div>
         </div>
       </div>
