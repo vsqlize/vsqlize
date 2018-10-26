@@ -7,9 +7,7 @@ import 'react-table/react-table.css';
 export default class Sidebar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      tables: ['Users', 'Dogs', 'Cats', 'Hampsters']
-    }
+    this.state = {}
   }
 
   componentDidMount() {
@@ -17,7 +15,7 @@ export default class Sidebar extends Component {
   }
 
   render() {
-    const { tables } = this.state;
+    const { tables } = this.props;
     const tableNames = [];
     tables.forEach(table => {
       tableNames.push({tableName: table});
