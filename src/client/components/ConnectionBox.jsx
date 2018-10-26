@@ -22,7 +22,7 @@ class ConnectionBox extends React.Component {
 
   handleSubmit(event) {
     console.log(this.state)
-    fetch('http://192.168.5.194:8080/api/connect', {
+    fetch('/api/connect', {
       method: 'POST', 
       headers: {'Content-Type': 'application/json; charset=utf-8'},
       body: JSON.stringify({
