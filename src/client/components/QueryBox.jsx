@@ -9,6 +9,7 @@ class QueryBox extends React.Component {
   }
 
   render(){
+    console.log(this.props.queryString);
     return (      
       <div>
         <div className='queryBox'>

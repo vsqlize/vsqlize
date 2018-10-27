@@ -206,7 +206,9 @@ function executeQuery (req, res, next) {
   .catch(err => {
     console.warn(err);
     res.header(400);
-    res.json((err));
+    res.json(({
+      DatabaseError: err
+    }));
     res.end();
   })
 }
