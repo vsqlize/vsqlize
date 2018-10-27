@@ -53,8 +53,6 @@ function connect(req, res, next) {
     rows[0].forEach(row => {
       tablesArr.push(row['?column?'].split('.')[1]);
     });
-    console.log(tablesArr);
-
 
     let sessionId = Math.floor(Math.random()*1000000);
 
@@ -103,7 +101,6 @@ function authenticate(req, res, next) {
 function viewTableContents(req, res, next) {
   
   let table = req.query.table;
-  console.log(table);
 
   let currentConnObj = req.connObj;
   currentConnObj.active = true;
@@ -132,7 +129,6 @@ function viewTableContents(req, res, next) {
           pkey = field.column_name;
         }
       });
-      console.log('primary key ', pkey);
       responseObj.primaryKey = pkey;
 
       res.header(200);
@@ -181,8 +177,6 @@ function executeQuery (req, res, next) {
   currentConnObj.active = true;
   currentConnObj.currentQuery = queryString;
   currentConnObj.createdAt = Date.now();
-
-  console.log('queryString ', queryString);
 
   currentConnObj.connection.query(currentConnObj.currentQuery)
   .then(rows => {

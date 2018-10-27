@@ -13,6 +13,7 @@ export default class App extends Component {
     this.state = {
       currentTable: '',
       queryString: '',
+      prevQueryString: '',
       tables: [],
       headers: [],
       data: [],
@@ -35,7 +36,7 @@ export default class App extends Component {
         if(data.AuthError) {
           this.toggleContentLogInDisplay();
         } else {
-          this.setState({ currentTable: tableName, queryString: data.queryString, headers: data.headers, data: data.data, primaryKey: data.primaryKey});
+          this.setState({ currentTable: tableName, prevQueryString: data.queryString, headers: data.headers, data: data.data, primaryKey: data.primaryKey});
         }
       })
   }
@@ -118,9 +119,10 @@ export default class App extends Component {
       }
       else {
         const obj = {
-          queryString : res.queryString,
+          queryString : '',
           headers: res.headers,
           data: res.data,
+          prevQueryString: res.queryString
         }
         this.setState(obj);
       }
@@ -157,6 +159,9 @@ export default class App extends Component {
             <NavBar logout={ this.toggleContentLogInDisplay }/>
             <div className="sideBar">
               <SideBar tables={ this.state.tables } getTableData={ this.getTableData }/>
+            </div>
+            <div className='previousQuery'>
+              Previous Query: {this.state.prevQueryString}
             </div>
             <QueryBox handleQueryChange={this.handleQueryChange} queryString={this.state.queryString} handleQuerySubmit={this.handleQuerySubmit} />
             <div className="viewTable">

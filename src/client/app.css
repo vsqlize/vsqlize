@@ -26,3 +26,10 @@ body {
   margin-left: 200px;
   padding: 0px 10px;
 }
+
+.previousQuery {
+  text-align: left;
+  font-size: 1.5em;
+  margin-left: 225px;
+  margin-top: 60px;
+}
