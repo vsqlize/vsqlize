@@ -151,7 +151,7 @@ function handleUpdateCell (req, res, next) {
   let updateField = req.body.updateField;
   let updateFieldValue = req.body.updateFieldValue;
 
-  let queryString = `update ${table} set ${updateField} = '${updateFieldValue}' where ${primaryKey} = ${primaryKeyValue}`;
+  let queryString = `update ${table} set ${updateField} = '${updateFieldValue.trim()}' where ${primaryKey} = ${primaryKeyValue}`;
 
   let currentConnObj = req.connObj;
   currentConnObj.active = true;
@@ -161,6 +161,7 @@ function handleUpdateCell (req, res, next) {
   currentConnObj.connection.query(currentConnObj.currentQuery)
   .then(() => {
     req.body.sqlQuery = `select * from ${table}`;
+    req.body.updateQuery = queryString;
     next();
   })
   .catch(err => {
@@ -185,17 +186,18 @@ function executeQuery (req, res, next) {
 
   currentConnObj.connection.query(currentConnObj.currentQuery)
   .then(rows => {
-    let responseObj = {
-      queryString: currentConnObj.currentQuery
-    };
-
     let headers = []; 
     rows[1].fields.forEach(field => {
       headers.push(field.name);
     })
-    responseObj.headers = headers;
 
-    responseObj.data = rows[0];
+    
+    let responseObj = {
+      queryString: req.body.updateQuery ? req.body.updateQuery : currentConnObj.currentQuery,
+      //queryString: currentConnObj.currentQuery,
+      headers : headers,
+      data : rows[0],
+    };
 
     res.header(200);
     res.json(responseObj);
