@@ -25,8 +25,9 @@ export default class App extends Component {
     this.toggleContentLogInDisplay = this.toggleContentLogInDisplay.bind(this);
     this.handleQueryChange = this.handleQueryChange.bind(this);
     this.handleQuerySubmit = this.handleQuerySubmit.bind(this);
-    this.getTdProps = this.getTdProps.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
     this.renderEditable = this.renderEditable.bind(this);
+    this.getTdProps = this.getTdProps.bind(this);
   }
 
   getTableData(tableName) {
@@ -36,7 +37,7 @@ export default class App extends Component {
         if(data.AuthError) {
           this.toggleContentLogInDisplay();
         } else {
-          this.setState({ queryString: data.queryString, headers: data.headers, data: data.data, primaryKey: data.primaryKey});
+          this.setState({ currentTable: tableName, queryString: data.queryString, headers: data.headers, data: data.data, primaryKey: data.primaryKey});
         }
       })
   }
@@ -54,7 +55,37 @@ export default class App extends Component {
         onBlur={e => {
           const data = [...this.state.data];
           data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
-          this.setState({ data });
+
+          const obj = {
+            table: this.state.currentTable,
+            primaryKey: this.state.primaryKey,
+            primaryKeyValue: data[cellInfo.index][this.state.primaryKey],
+            updateField: cellInfo.column.id,
+            updateFieldValue: data[cellInfo.index][cellInfo.column.id]
+          }
+          console.log(obj);
+
+          fetch('/api/table', {
+            method: 'PATCH', 
+            headers: {'Content-Type': 'application/json; charset=utf-8'},
+            body: JSON.stringify(obj)           
+          })
+          .then((res) => res.json())
+          .then((res) => {
+            if(res.AuthError) {
+              this.toggleContentLogInDisplay();
+            } else {
+              const obj = {
+                queryString : res.queryString,
+                headers: res.headers,
+                data: res.data,
+              }
+              this.setState(obj);
+            }
+          });
+
+
+          // this.setState({ data });
         }}
         dangerouslySetInnerHTML={{
           __html: this.state.data[cellInfo.index][cellInfo.column.id]
@@ -73,11 +104,24 @@ export default class App extends Component {
     this.setState({ queryString: event.target.value});
   }
 
+  handleKeyPress(event) {
+    if (event.keyCode == 13) {
+      console.log('i pressed enter');
+      event.preventDefault();
+      event.stopPropagation();
+      console.log(event);
+    }
+  }
+
   getTdProps(state, rowInfo, column, instance) {
-    console.log('state', state);
-    console.log('rowInfo', rowInfo);
-    console.log('column', column);
-    console.log('instance', instance);
+    return {
+      onClick: () => {
+        console.log('state', state);
+        console.log('rowInfo', rowInfo);
+        console.log('column', column);
+        console.log('instance', instance);
+      }
+    };
   }
 
   handleQuerySubmit(event) {
@@ -137,16 +181,7 @@ export default class App extends Component {
             <QueryBox handleQueryChange={this.handleQueryChange} queryString={this.state.queryString} handleQuerySubmit={this.handleQuerySubmit} />
             <div className="viewTable">
               <ReactTable 
-                getTdProps={(state, rowInfo, column, instance) => {
-                  return {
-                      onClick: () => {
-                        console.log('state', state);
-                        console.log('rowInfo', rowInfo);
-                        console.log('column', column);
-                        console.log('instance', instance);
-                      }
-                    };
-                  }}
+                getTdProps={this.getTdProps}
                 data = { data } columns = { colNames }/>
             </div>
           </div>
