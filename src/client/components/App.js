@@ -101,17 +101,6 @@ export default class App extends Component {
     this.setState({ queryString: event.target.value});
   }
 
-  // getTdProps(state, rowInfo, column, instance) {
-  //   return {
-  //     onClick: () => {
-  //       console.log('state', state);
-  //       console.log('rowInfo', rowInfo);
-  //       console.log('column', column);
-  //       console.log('instance', instance);
-  //     }
-  //   };
-  // }
-
   handleQuerySubmit(event) {
     fetch('/api/table', {
       method: 'POST', 
@@ -170,7 +159,13 @@ export default class App extends Component {
             <div className="viewTable">
               <ReactTable 
                 getTdProps={this.getTdProps}
-                data = { data } columns = { colNames }/>
+                data = { data } columns = { colNames }
+                defaultSorted={[
+                  {
+                    id: this.state.primaryKey,
+                    // desc: false
+                  }
+                ]}/>
             </div>
           </div>
         </div>
