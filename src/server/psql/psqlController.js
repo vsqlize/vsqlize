@@ -3,10 +3,12 @@ const Sequelize = require('sequelize');
 const psqlController = {};
 
 psqlController.connect = connect;
+psqlController.authenticate = authenticate;
 psqlController.viewTableContents = viewTableContents;
 psqlController.removeConnection = removeConnection;
 psqlController.getAllConnections = getAllConnections;
 psqlController.executeQuery = executeQuery;
+psqlController.handleUpdateCell = handleUpdateCell;
 
 psqlController.connections = [];
 
@@ -72,19 +74,14 @@ function connect(req, res, next) {
   });
 };
 
-function viewTableContents(req, res, next) {
+function authenticate(req, res, next) {
   if(!req.cookies['sessionId']){
     //return psqlController.connect(req,res,next);
     res.header(500);
     res.send({AuthError: 'Authentication Error: Session does not exist, should redirect back to authentication page'});
   }
-  
-  let table = req.query.table;
-  let sessionId = req.cookies['sessionId'];
-  console.log(table);
-  console.log(sessionId);
 
-  //find relevant connection object
+  let sessionId = req.cookies['sessionId'];
   let currentConnObj;
   for (let i = 0; i < psqlController.connections.length; i++){
     if(psqlController.connections[i].sessionId == sessionId){
@@ -99,7 +96,16 @@ function viewTableContents(req, res, next) {
     return;
   }
 
+  req.connObj = currentConnObj;
+  next();
+}
 
+function viewTableContents(req, res, next) {
+  
+  let table = req.query.table;
+  console.log(table);
+
+  let currentConnObj = req.connObj;
   currentConnObj.active = true;
   currentConnObj.currentQuery = `select * from ${table}`;
   currentConnObj.createdAt = Date.now();
@@ -137,36 +143,45 @@ function viewTableContents(req, res, next) {
   
 }
 
-function executeQuery (req, res, next) {
-  if(!req.cookies['sessionId']){
-    res.header(500);
-    res.send({AuthError : 'Authentication Error: Session does not exist, should redirect back to authentication page'});
-  }
+function handleUpdateCell (req, res, next) {
 
-  let sessionId = req.cookies['sessionId'];
-  let queryString = req.body.sqlQuery;
+  let table = req.body.table;
+  let primaryKey = req.body.primaryKey;
+  let primaryKeyValue = req.body.primaryKeyValue;
+  let updateField = req.body.updateField;
+  let updateFieldValue = req.body.updateFieldValue;
 
-  //find relevant connection object
-  let currentConnObj;
-  console.log('conn arr length', psqlController.connections.length);
-  for (let i = 0; i < psqlController.connections.length; i++){
-    console.log(psqlController.connections[i]);
-    if(psqlController.connections[i].sessionId == sessionId){
-      currentConnObj = psqlController.connections[i];
-      break;
-    }
-  }
+  let queryString = `update ${table} set ${updateField} = '${updateFieldValue}' where ${primaryKey} = ${primaryKeyValue}`;
 
-  console.log(currentConnObj);
-  if(!currentConnObj || currentConnObj === undefined){
-    res.header(500);
-    res.send({AuthError : 'Authentication Error: No matching connection object for session cookie, should redirect back to authentication page'});
-    return;
-  }
-
+  let currentConnObj = req.connObj;
   currentConnObj.active = true;
   currentConnObj.currentQuery = queryString;
   currentConnObj.createdAt = Date.now();
+
+  currentConnObj.connection.query(currentConnObj.currentQuery)
+  .then(() => {
+    req.body.sqlQuery = `select * from ${table}`;
+    next();
+  })
+  .catch(err => {
+    console.warn(err);
+    res.header(400);
+    res.json((err));
+    res.end();
+  })
+  
+}
+
+function executeQuery (req, res, next) {
+ 
+  let queryString = req.body.sqlQuery;
+
+  let currentConnObj = req.connObj;
+  currentConnObj.active = true;
+  currentConnObj.currentQuery = queryString;
+  currentConnObj.createdAt = Date.now();
+
+  console.log('queryString ', queryString);
 
   currentConnObj.connection.query(currentConnObj.currentQuery)
   .then(rows => {
