@@ -76,7 +76,7 @@ function viewTableContents(req, res, next) {
   if(!req.cookies['sessionId']){
     //return psqlController.connect(req,res,next);
     res.header(500);
-    res.send('Session does not exist, should redirect back to authentication page');
+    res.send({AuthError: 'Authentication Error: Session does not exist, should redirect back to authentication page'});
   }
   
   let table = req.query.table;
@@ -95,31 +95,53 @@ function viewTableContents(req, res, next) {
 
   if(!currentConnObj){
     res.header(500);
-    res.send('No matching connection object for session cookie, should redirect back to authentication page');
+    res.send({AuthError : 'Authentication Error: No matching connection object for session cookie, should redirect back to authentication page'});
     return;
   }
 
+
   currentConnObj.active = true;
   currentConnObj.currentQuery = `select * from ${table}`;
+  currentConnObj.createdAt = Date.now();
 
   currentConnObj.connection.query(currentConnObj.currentQuery)
   .then(rows => {
+<<<<<<< HEAD
 
     let responseObj = {
       queryString: currentConnObj.currentQuery
     };
+=======
+    console.log(rows[1]);
+>>>>>>> c8ea7f6bb60bf80de61570525480396218545cf2
 
     let headers = []; 
     rows[1].fields.forEach(field => {
       headers.push(field.name);
     })
-    responseObj.headers = headers;
 
-    responseObj.data = rows[0];
+    let responseObj = {
+      queryString: currentConnObj.currentQuery,
+      headers : headers,
+      data : rows[0],
+    };
 
-    res.header(200);
-    res.json(responseObj);
-    res.end();
+    currentConnObj.connection.query(`SELECT constraint_name, table_name, column_name, ordinal_position FROM information_schema.key_column_usage WHERE table_name = '${table}';`)
+    .then(rows => {
+      let fieldAttributes = (rows[1].rows);
+      let pkey;
+      fieldAttributes.forEach(field => {
+        if(field.constraint_name == `${table}_pkey`) {
+          pkey = field.column_name;
+        }
+      });
+      console.log('primary key ', pkey);
+      responseObj.primaryKey = pkey;
+
+      res.header(200);
+      res.json(responseObj);
+      res.end();
+    })
   })
   
 }
@@ -127,7 +149,7 @@ function viewTableContents(req, res, next) {
 function executeQuery (req, res, next) {
   if(!req.cookies['sessionId']){
     res.header(500);
-    res.send('Session does not exist, should redirect back to authentication page');
+    res.send({AuthError : 'Authentication Error: Session does not exist, should redirect back to authentication page'});
   }
 
   let sessionId = req.cookies['sessionId'];
@@ -147,16 +169,30 @@ function executeQuery (req, res, next) {
   console.log(currentConnObj);
   if(!currentConnObj || currentConnObj === undefined){
     res.header(500);
-    res.send('No matching connection object for session cookie, should redirect back to authentication page');
+    res.send({AuthError : 'Authentication Error: No matching connection object for session cookie, should redirect back to authentication page'});
     return;
   }
 
+  currentConnObj.active = true;
   currentConnObj.currentQuery = queryString;
+  currentConnObj.createdAt = Date.now();
+
   currentConnObj.connection.query(currentConnObj.currentQuery)
   .then(rows => {
-    console.log(rows[0]);
+    let responseObj = {
+      queryString: currentConnObj.currentQuery
+    };
+
+    let headers = []; 
+    rows[1].fields.forEach(field => {
+      headers.push(field.name);
+    })
+    responseObj.headers = headers;
+
+    responseObj.data = rows[0];
+
     res.header(200);
-    res.json(rows[0]);
+    res.json(responseObj);
     res.end();
   })
   .catch(err => {

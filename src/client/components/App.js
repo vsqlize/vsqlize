@@ -15,13 +15,8 @@ export default class App extends Component {
       queryString: '',
       tables: [],
       headers: [],
-      data: [{
-        id: '01',
-        name: 'Kyle Combs',
-        age: '40',
-        address: '53 2nd Avenue #5B',
-        salary: 120000 
-      }],
+      data: [],
+      primaryKey : '',
       loggedIn : false,
     }
 
@@ -37,7 +32,13 @@ export default class App extends Component {
   getTableData(tableName) {
     fetch(`/api/table?table=${tableName}`)
       .then(res => res.json())
-      .then(data => this.setState({ queryString: data.queryString, headers: data.headers, data: data.data }))
+      .then(data => {
+        if(data.AuthError) {
+          this.toggleContentLogInDisplay();
+        } else {
+          this.setState({ queryString: data.queryString, headers: data.headers, data: data.data, primaryKey: data.primaryKey});
+        }
+      })
   }
 
   toggleContentLogInDisplay() {
@@ -89,11 +90,16 @@ export default class App extends Component {
     })
     .then((res) => res.json())
     .then((res) => {
-      const obj = {
-        headers: Object.keys(res[0]),
-        data: res
+      if(res.AuthError) {
+        this.toggleContentLogInDisplay();
+      } else {
+        const obj = {
+          queryString : res.queryString,
+          headers: res.headers,
+          data: res.data,
+        }
+        this.setState(obj);
       }
-      this.setState(obj);
     });
 
     event.preventDefault();
