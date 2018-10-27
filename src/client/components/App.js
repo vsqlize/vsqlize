@@ -3,6 +3,7 @@ import '../app.css';
 import SideBar from './Sidebar';
 import ConnectionBox from './ConnectionBox.jsx';
 import NavBar from './NavBar.jsx';
+import QueryBox from './QueryBox.jsx';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
@@ -10,8 +11,8 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentTable: null,
-      queryString: null,
+      currentTable: '',
+      queryString: '',
       tables: [],
       headers: [],
       data: [{
@@ -27,6 +28,8 @@ export default class App extends Component {
     this.getTables = this.getTables.bind(this);
     this.getTableData = this.getTableData.bind(this);
     this.toggleContentLogInDisplay = this.toggleContentLogInDisplay.bind(this);
+    this.handleQueryChange = this.handleQueryChange.bind(this);
+    this.handleQuerySubmit = this.handleQuerySubmit.bind(this);
   }
 
   getTableData(tableName) {
@@ -43,6 +46,31 @@ export default class App extends Component {
     this.setState({
       tables: res
     });
+  }
+
+  handleQueryChange(event) {
+    this.setState({ queryString: event.target.value});
+  }
+
+  handleQuerySubmit(event) {
+    fetch('/api/table', {
+      method: 'POST', 
+      headers: {'Content-Type': 'application/json; charset=utf-8'},
+      body: JSON.stringify({
+        'sqlQuery': this.state.queryString
+      })
+    })
+    .then((res) => res.json())
+    .then((res) => {
+      const obj = {
+        headers: Object.keys(res[0]),
+        data: res
+      }
+      this.setState(obj);
+    });
+
+    event.preventDefault();
+    this.setState({ value: '' });
   }
 
   render() {
@@ -72,6 +100,7 @@ export default class App extends Component {
             <div className="sideBar">
               <SideBar tables={ this.state.tables } getTableData={ this.getTableData }/>
             </div>
+            <QueryBox handleQueryChange={this.handleQueryChange} queryString={this.state.queryString} handleQuerySubmit={this.handleQuerySubmit} />
             <div className="viewTable">
               <ReactTable data = { data } columns = { colNames }/>
             </div>

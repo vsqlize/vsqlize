@@ -53,6 +53,7 @@ input[type=text]:focus {
 
 .navBar {
   position: fixed;
+  overflow: hidden;
   top: 0;
   height: 50px;
   width: 100%;
@@ -69,14 +70,13 @@ input[type=text]:focus {
 
 .navBar li {
   float: right;
-  font-size: 1.5em;
 }
 
 .navBar li a {
   display: block;
   color: white;
   text-align: center;
-  padding: 12px 14px;
+  padding: 17px 18px;
   text-decoration: none;
 }
 
@@ -85,7 +85,26 @@ input[type=text]:focus {
 }
 
 .svgicons {
-  height: 12px;
-  width: 12px;
+  height: 15px;
+  width: 15px;
   margin-right: 5px;
+}
+
+.queryBox {
+  height: 200px;
+  width: 85%;
+}
+
+textarea {
+  height: 150px; 
+  width: 80%; 
+  padding: 10px;
+  border-radius: 4px;
+  border: 0.5px solid #ebebeb;
+  transition: box-shadow .1s;
+  margin: 10px;
+  float: left;
+}
+textarea:focus {
+  outline: none;
 }

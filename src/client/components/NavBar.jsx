@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../ConnectionBox.css';
-import dataIcon from '../assets/data-icon.svg';
-import queryIcon from '../assets/query-icon.svg';
+import userIcon from '../assets/user-icon.svg';
 
 class NavBar extends React.Component {
   constructor(props) {
@@ -14,7 +13,7 @@ class NavBar extends React.Component {
       <div className='wrapper'>
         <div className='navBar'>
         <ul>
-          <li><a className="active" href="#data" name='data' onClick={this.props.logout}>Log Out</a></li>
+          <li><a className="active" href="#data" name='data' onClick={this.props.logout}><img src={userIcon} className='svgicons'/>Log Out</a></li>
         </ul>
         </div>
       </div>
