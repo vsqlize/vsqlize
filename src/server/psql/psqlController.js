@@ -106,15 +106,6 @@ function viewTableContents(req, res, next) {
 
   currentConnObj.connection.query(currentConnObj.currentQuery)
   .then(rows => {
-<<<<<<< HEAD
-
-    let responseObj = {
-      queryString: currentConnObj.currentQuery
-    };
-=======
-    console.log(rows[1]);
->>>>>>> c8ea7f6bb60bf80de61570525480396218545cf2
-
     let headers = []; 
     rows[1].fields.forEach(field => {
       headers.push(field.name);
