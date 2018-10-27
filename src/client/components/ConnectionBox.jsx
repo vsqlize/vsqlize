@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../ConnectionBox.css';
+import logo from '../assets/logo.png';
 
 class ConnectionBox extends React.Component {
   constructor(props, context) {
@@ -51,31 +52,33 @@ class ConnectionBox extends React.Component {
 
   render(){
     return (      
-      <div className='wrapper'>
-        <div className='connectionBox'>
+      <div className='connectionBoxwrapper'>
+        <div className='logoAndConnectionBox'>
+          <div className='logo'><img src={logo}/></div>
           <form onSubmit={this.handleSubmit}>
-            <div>Server/Host: 
-                <input type='text' name='host' value={this.state.host} onChange={this.handleChange} />
+            <div className='connectionBox'>
+              <div className='connectionBoxTop'>
+                <div className='connectionBoxLeft'>
+                  <div>Server/Host:</div>
+                  <div>Port:</div>
+                  <div>User:</div>
+                  <div>Password:</div>
+                  <div>Database:</div>
+                </div>
+                <div className='connectionBoxRight'>
+                  <input type='text' name='host' value={this.state.host} onChange={this.handleChange} />
+                  <input type='text' name='port' value={this.state.port} onChange={this.handleChange} />
+                  <input type='text' name='user' value={this.state.user} onChange={this.handleChange} />
+                  <input type='text' name='password' value={this.state.password} onChange={this.handleChange} />
+                  <input type='text' name='database' value={this.state.database} onChange={this.handleChange} />
+                </div>
+              </div>  
+              <div className='connectionBoxBottom'>
+                <button id='submit-button' value="Submit">submit</button>
+              </div>
             </div>
-            <div>Port:
-                <input type='text' name='port' value={this.state.port} onChange={this.handleChange} />
-            </div>  
-            <div>User:
-                <input type='text' name='user' value={this.state.user} onChange={this.handleChange} />
-            </div>
-            <div>Password:
-                <input type='text' name='password' value={this.state.password} onChange={this.handleChange} />
-            </div>
-            <div>Database:
-                <input type='text' name='database' value={this.state.database} onChange={this.handleChange} />
-            </div>
-
-
-
-
-            <button id='submit-button' value="Submit">submit</button>
           </form>
-        </div>
+        </div>  
       </div>
     )
   }

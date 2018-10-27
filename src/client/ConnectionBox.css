@@ -23,10 +23,17 @@ input[type=text]:focus {
   outline: none;
 }
 
-.wrapper {
+.connectionBoxWrapper {
   height: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.logoAndConnectionBox {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
   align-items: center;
 }
 
@@ -37,7 +44,32 @@ input[type=text]:focus {
   border-radius: 10px;
   border: 0.5px solid #ebebeb;
   display: flex;
+  flex-direction: column;
+}
+
+
+.connectionBoxTop {
+  display: flex;
+  flex-direction: row;
   justify-content: center;
+}
+
+.connectionBoxLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-end;
+  margin-left: 10px;
+}
+
+.connectionBoxRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.connectionBoxBottom {
+  padding-top: 10px;
 }
 
 #submit-button {
@@ -50,6 +82,9 @@ input[type=text]:focus {
   cursor: pointer;
   border-radius: 4px;
 }
+#submit-button:focus {
+  outline: none;
+}
 
 .navBar {
   position: fixed;
@@ -58,7 +93,6 @@ input[type=text]:focus {
   height: 50px;
   width: 100%;
   background-color: #333;
-  text-transform: uppercase;
 }
 
 .navBar ul {
@@ -70,6 +104,7 @@ input[type=text]:focus {
 
 .navBar li {
   float: right;
+  display: inline-block
 }
 
 .navBar li a {
@@ -92,19 +127,44 @@ input[type=text]:focus {
 
 .queryBox {
   height: 200px;
-  width: 85%;
+  width: 100%;
+  margin-left: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* box-sizing: border-box; */
+}
+
+.queryBox form{
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 textarea {
   height: 150px; 
-  width: 80%; 
+  width: 90%; 
   padding: 10px;
   border-radius: 4px;
   border: 0.5px solid #ebebeb;
   transition: box-shadow .1s;
-  margin: 10px;
-  float: left;
+  margin: 30px;
 }
 textarea:focus {
   outline: none;
+}
+
+.queryButton {
+  padding: 10px;
+}
+
+.logo {
+  margin-bottom: 15px;
+}
+
+.logoNoText{
+  margin: 10px;
+  padding-left: 10px;
+  float: left;
 }
