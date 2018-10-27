@@ -9,12 +9,14 @@ class QueryBox extends React.Component {
   }
 
   render(){
+    console.log(this.props.queryString);
     return (      
       <div>
-        <div className='queryBox' style={{marginLeft:'200px'}}>
+        <div className='queryBox'>
           <form onSubmit={this.props.handleQuerySubmit}>
+            <div className='test'></div>
             <textarea value={this.props.queryString} onChange={this.props.handleQueryChange} />
-            <button id='submit-button' value="Submit">Query</button>
+            <div className='queryButton'><button id='submit-button' value="Submit">Query</button></div>
           </form>  
         </div>
       </div>

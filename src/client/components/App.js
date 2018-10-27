@@ -113,7 +113,10 @@ export default class App extends Component {
     .then((res) => {
       if(res.AuthError) {
         this.toggleContentLogInDisplay();
-      } else {
+      } else if (res.DatabaseError) {
+        alert('INVALID QUERY');
+      }
+      else {
         const obj = {
           queryString : res.queryString,
           headers: res.headers,
