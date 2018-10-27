@@ -104,8 +104,6 @@ function viewTableContents(req, res, next) {
 
   currentConnObj.connection.query(currentConnObj.currentQuery)
   .then(rows => {
-    console.log(rows[1].fields);
-    console.log(rows[0]);
 
     let responseObj = {
       queryString: currentConnObj.currentQuery

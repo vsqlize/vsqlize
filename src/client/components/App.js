@@ -30,6 +30,8 @@ export default class App extends Component {
     this.toggleContentLogInDisplay = this.toggleContentLogInDisplay.bind(this);
     this.handleQueryChange = this.handleQueryChange.bind(this);
     this.handleQuerySubmit = this.handleQuerySubmit.bind(this);
+    this.getTdProps = this.getTdProps.bind(this);
+    this.renderEditable = this.renderEditable.bind(this);
   }
 
   getTableData(tableName) {
@@ -42,6 +44,24 @@ export default class App extends Component {
     this.setState({loggedIn : !this.state.loggedIn});
   }
 
+  renderEditable(cellInfo) {
+    return (
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+        contentEditable
+        suppressContentEditableWarning
+        onBlur={e => {
+          const data = [...this.state.data];
+          data[cellInfo.index][cellInfo.column.id] = e.target.innerHTML;
+          this.setState({ data });
+        }}
+        dangerouslySetInnerHTML={{
+          __html: this.state.data[cellInfo.index][cellInfo.column.id]
+        }}
+      />
+    );
+  }
+
   getTables(res) {
     this.setState({
       tables: res
@@ -50,6 +70,13 @@ export default class App extends Component {
 
   handleQueryChange(event) {
     this.setState({ queryString: event.target.value});
+  }
+
+  getTdProps(state, rowInfo, column, instance) {
+    console.log('state', state);
+    console.log('rowInfo', rowInfo);
+    console.log('column', column);
+    console.log('instance', instance);
   }
 
   handleQuerySubmit(event) {
@@ -79,7 +106,8 @@ export default class App extends Component {
     headers.forEach(head => {
       colNames.push({
         Header: head,
-        accessor: head
+        accessor: head,
+        Cell: this.renderEditable
       })
 
     })
@@ -102,7 +130,18 @@ export default class App extends Component {
             </div>
             <QueryBox handleQueryChange={this.handleQueryChange} queryString={this.state.queryString} handleQuerySubmit={this.handleQuerySubmit} />
             <div className="viewTable">
-              <ReactTable data = { data } columns = { colNames }/>
+              <ReactTable 
+                getTdProps={(state, rowInfo, column, instance) => {
+                  return {
+                      onClick: () => {
+                        console.log('state', state);
+                        console.log('rowInfo', rowInfo);
+                        console.log('column', column);
+                        console.log('instance', instance);
+                      }
+                    };
+                  }}
+                data = { data } columns = { colNames }/>
             </div>
           </div>
         </div>
