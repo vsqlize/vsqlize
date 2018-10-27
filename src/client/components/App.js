@@ -25,9 +25,7 @@ export default class App extends Component {
     this.toggleContentLogInDisplay = this.toggleContentLogInDisplay.bind(this);
     this.handleQueryChange = this.handleQueryChange.bind(this);
     this.handleQuerySubmit = this.handleQuerySubmit.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
     this.renderEditable = this.renderEditable.bind(this);
-    this.getTdProps = this.getTdProps.bind(this);
   }
 
   getTableData(tableName) {
@@ -63,7 +61,6 @@ export default class App extends Component {
             updateField: cellInfo.column.id,
             updateFieldValue: data[cellInfo.index][cellInfo.column.id]
           }
-          console.log(obj);
 
           fetch('/api/table', {
             method: 'PATCH', 
@@ -104,25 +101,16 @@ export default class App extends Component {
     this.setState({ queryString: event.target.value});
   }
 
-  handleKeyPress(event) {
-    if (event.keyCode == 13) {
-      console.log('i pressed enter');
-      event.preventDefault();
-      event.stopPropagation();
-      console.log(event);
-    }
-  }
-
-  getTdProps(state, rowInfo, column, instance) {
-    return {
-      onClick: () => {
-        console.log('state', state);
-        console.log('rowInfo', rowInfo);
-        console.log('column', column);
-        console.log('instance', instance);
-      }
-    };
-  }
+  // getTdProps(state, rowInfo, column, instance) {
+  //   return {
+  //     onClick: () => {
+  //       console.log('state', state);
+  //       console.log('rowInfo', rowInfo);
+  //       console.log('column', column);
+  //       console.log('instance', instance);
+  //     }
+  //   };
+  // }
 
   handleQuerySubmit(event) {
     fetch('/api/table', {
