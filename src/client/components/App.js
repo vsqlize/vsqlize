@@ -63,8 +63,9 @@ export default class App extends Component {
     .then((res) => res.json())
     .then((res) => {
       const obj = {
-        headers: Object.keys(res[0]),
-        data: res
+        queryString : res.queryString,
+        headers: res.headers,
+        data: res.data,
       }
       this.setState(obj);
     });

@@ -156,9 +156,20 @@ function executeQuery (req, res, next) {
   currentConnObj.currentQuery = queryString;
   currentConnObj.connection.query(currentConnObj.currentQuery)
   .then(rows => {
-    console.log(rows[0]);
+    let responseObj = {
+      queryString: currentConnObj.currentQuery
+    };
+
+    let headers = []; 
+    rows[1].fields.forEach(field => {
+      headers.push(field.name);
+    })
+    responseObj.headers = headers;
+
+    responseObj.data = rows[0];
+
     res.header(200);
-    res.json(rows[0]);
+    res.json(responseObj);
     res.end();
   })
   .catch(err => {
