@@ -16,8 +16,8 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.listen(8080, () => {
-  console.log('listening at http://localhost:8080');
+app.listen(80, () => {
+  console.log('listening at http://localhost:80');
 });
 
 // //CLIENT ROUTES
