@@ -152,6 +152,7 @@ export default class App extends Component {
         
         <div style={{marginTop:'50px'}}>
           <div id='logInWindow' style={{display : isDisplayedLogInWindow}}>
+            {/* <h2>Provide your SQL connection details to utilize the vSQLize DBMS GUI</h2> */}
             <ConnectionBox cb={this.getTables} toggleContentLogInDisplay={this.toggleContentLogInDisplay}/>
           </div>
           
