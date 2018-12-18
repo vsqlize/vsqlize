@@ -47,7 +47,6 @@ class ConnectionBox extends React.Component {
     });
 
     event.preventDefault();
-    this.setState({ value: '' });
   }
 
   render(){
@@ -55,6 +54,7 @@ class ConnectionBox extends React.Component {
       <div className='connectionBoxwrapper'>
         <div className='logoAndConnectionBox'>
           <div className='logo'><img src={logo}/></div>
+            <p>Provide your SQL database connection details to utilize vSQLize</p>
           <form onSubmit={this.handleSubmit}>
             <div className='connectionBox'>
               <div className='connectionBoxTop'>
