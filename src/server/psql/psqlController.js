@@ -120,6 +120,7 @@ function viewTableContents(req, res, next) {
       data : rows[0],
     };
 
+    //get primary key
     currentConnObj.connection.query(`SELECT constraint_name, table_name, column_name, ordinal_position FROM information_schema.key_column_usage WHERE table_name = '${table}';`)
     .then(rows => {
       let fieldAttributes = (rows[1].rows);

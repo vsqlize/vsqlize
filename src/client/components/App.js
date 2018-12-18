@@ -97,8 +97,7 @@ export default class App extends Component {
       tables: res
     });
   }
-
-  handleQueryChange(event) {
+    handleQueryChange(event) {
     this.setState({ queryString: event.target.value});
   }
 
@@ -129,7 +128,6 @@ export default class App extends Component {
     });
 
     event.preventDefault();
-    this.setState({ value: '' });
   }
 
   render() {
@@ -152,7 +150,6 @@ export default class App extends Component {
         
         <div style={{marginTop:'50px'}}>
           <div id='logInWindow' style={{display : isDisplayedLogInWindow}}>
-            {/* <h2>Provide your SQL connection details to utilize the vSQLize DBMS GUI</h2> */}
             <ConnectionBox cb={this.getTables} toggleContentLogInDisplay={this.toggleContentLogInDisplay}/>
           </div>
           
@@ -168,7 +165,8 @@ export default class App extends Component {
             <div className="viewTable">
               <ReactTable 
                 getTdProps={this.getTdProps}
-                data = { data } columns = { colNames }
+                data = { data } 
+                columns = { colNames }
                 defaultSorted={[
                   {
                     id: this.state.primaryKey,
